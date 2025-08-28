@@ -1,7 +1,6 @@
-FROM golang:1.21-alpine AS build
+FROM alpine:latest
+EXPOSE 8080
 WORKDIR /app
-COPY . .
-RUN go build -ldflags="-s -w" -o proxy
-FROM gcr.io/distroless/static
-COPY --from=build /app/proxy /
-ENTRYPOINT ["/proxy"]
+RUN wget https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip && unzip v2ray-linux-64.zip && rm v2ray-linux-64.zip && rm config.json
+COPY config.json /app
+ENTRYPOINT ["./v2ray","run"]
